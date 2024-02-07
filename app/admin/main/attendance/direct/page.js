@@ -8,7 +8,7 @@ export default function Home() {
   const results = [];
   const [FinalARR, setFinalARR] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [DeviceIP, setDeviceIP] = useState("192.168.1")
+  const [DeviceIP, setDeviceIP] = useState("192.168.1");
 
   const searchQueryLowercase = searchQuery.toLowerCase();
   const filteredCards = FinalARR.filter(
@@ -26,8 +26,8 @@ export default function Home() {
     const reader = new FileReader();
     reader.onload = () => {
       parseCSV(reader.result);
-      console.log("readerresult")
-      console.log(reader.result)
+      console.log("readerresult");
+      console.log(reader.result);
     };
     reader.readAsText(selectedFile);
   };
@@ -90,16 +90,16 @@ export default function Home() {
     }
   };
 
-const [Connecting, setConnecting] = useState(false);
+  const [Connecting, setConnecting] = useState(false);
 
   const connectToMachine = () => {
     setConnecting(true);
     getFileNames();
-  }
+  };
 
   const getFileNames = async () => {
     try {
-      const response = await fetch(`http://${DeviceIP}`, {
+      const response = await fetch(`https://${DeviceIP}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -108,10 +108,10 @@ const [Connecting, setConnecting] = useState(false);
 
       if (response) {
         const data = await response.json();
-        const fileNames = data.filter((item) => item.file).map((item) => item.file);
+        const fileNames = data
+          .filter((item) => item.file)
+          .map((item) => item.file);
         console.log(fileNames);
-        
-   
       } else {
         console.error("Failed to fetch attendance. Status:", response.status);
       }
@@ -176,201 +176,75 @@ const [Connecting, setConnecting] = useState(false);
 
   return (
     <div className="p-4 sm:ml-64 mt-14">
-      
-
-        <label
-          for="default-search"
-          class="mb-2 text-sm font-medium text-gray-900 sr-only"
-        >
-          Connexct
-        </label>
-        <div class="relative">
-          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg
-              class="w-4 h-4 text-gray-500 "
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-              />
-            </svg>
-          </div>
-          <input
-            type="search"
-            value={DeviceIP}
-            onChange={(e) => {
-              setDeviceIP(e.target.value);
-            }}
-            id="default-search"
-            class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 outline-none"
-            placeholder="192.168.1.X"
-            required
-          />
-          <button
-            type="submit"
-            onClick={connectToMachine}
-            class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
+      <label
+        for="default-search"
+        class="mb-2 text-sm font-medium text-gray-900 sr-only"
+      >
+        Connexct
+      </label>
+      <div class="relative">
+        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+          <svg
+            class="w-4 h-4 text-gray-500 "
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 20 20"
           >
-            Connect
-          </button>
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+            />
+          </svg>
         </div>
-
-
-
-
-
-   
-
-      {/* {idList.length > 0 && (
-        <div>
-          <h2 className="text-lg font-semibold mt-4 mb-2">Extracted IDs</h2>
-          <pre>{JSON.stringify(idList, null, 2)}</pre>
-        </div>
-
-      )} */}
-
-      {filteredCards.length > 0 ?(
-        <form>
-        <label
-          for="default-search"
-          class="mb-2 text-sm font-medium text-gray-900 sr-only"
+        <input
+          type="search"
+          value={DeviceIP}
+          onChange={(e) => {
+            setDeviceIP(e.target.value);
+          }}
+          id="default-search"
+          class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          placeholder="192.168.1.X"
+          required
+        />
+        <a
+          href={`http://${DeviceIP}`}
+          class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
         >
-          Search
-        </label>
-        <div class="relative">
-          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg
-              class="w-4 h-4 text-gray-500 "
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-              />
-            </svg>
-          </div>
-          <input
-            type="search"
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-            }}
-            id="default-search"
-            class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 outline-none"
-            placeholder="Search Mockups, Logos..."
-            required
-          />
-          <button
-            type="submit"
-            class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
-          >
-            Search
-          </button>
-        </div>
-      </form>
-      ):""}
+          Connect
+        </a>
+      </div>
 
-       <div className="relative overflow-x-auto shadow-md sm:rounded-lg h-screen">
-
-    
-      {filteredCards.length > 0 ? (
-        <table className="w-full mt-3 text-md text-left rtl:text-right text-gray-500">
-          <thead className="text-md text-gray-700 uppercase bg-gray-50">
-            <tr>
-              <th scope="col" className="px-6 py-3">
-                Card ID
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Name
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Class
-              </th>{" "}
-              <th scope="col" className="px-6 py-3">
-                Contact
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Login
-              </th>{" "}
-              <th scope="col" className="px-6 py-3">
-                Logout
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredCards.map((card) => (
-              <tr key={card.cardID} className="bg-white border-b">
-                {/* Display only the relevant columns */}
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-semibold text-gray-900 whitespace-nowrap"
-                >
-                  {card.cardID}
-                </th>
-                <td className="px-6 py-4">{card.name}</td>
-                <td className="px-6 py-4">{card.class}</td>
-                <td className="px-6 py-4">{card.contact}</td>
-                <td className="px-6 py-4">{card.Login}</td>
-                <td className="px-6 py-4">{card.Logout}</td>
-
-                <td className="px-6 py-4">
-                  <a
-                    href="#"
-                    className="font-medium text-blue-600 hover:underline"
-                  >
-                    Edit
-                  </a>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p className="text-gray-500 text-lg mt-4 text-center">@ZBYTES SYSTEMS</p>
-      )}
-   </div>
-      {/* <div className="overflow-x-auto">
-      <table className="min-w-full bg-white border border-gray-200">
-        <thead>
-          <tr>
-            <th className="border-b px-4 py-2">Card ID</th>
-            <th className="border-b px-4 py-2">Name</th>
-            <th className="border-b px-4 py-2">Class</th>
-            <th className="border-b px-4 py-2">Contact</th>
-            <th className="border-b px-4 py-2">Login</th>
-            <th className="border-b px-4 py-2">Logout</th>
-          </tr>
-        </thead>
-        <tbody>
-          {FinalARR.map((item) => (
-            <tr key={item.cardID}>
-              <td className="border-b px-4 py-2">{item.cardID}</td>
-              <td className="border-b px-4 py-2">{item.name}</td>
-              <td className="border-b px-4 py-2">{item.class}</td>
-              <td className="border-b px-4 py-2">{item.contact}</td>
-              <td className="border-b px-4 py-2">{item.Login}</td>
-              <td className="border-b px-4 py-2">{item.Logout}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div> */}
+      <div className="mt-5">
+        <p class="mb-3 text-gray-500 dark:text-gray-700">
+          1. Turn on your hotspot and choose mode 2 on the machine.
+        </p>
+        <p class="mb-3 text-gray-500 dark:text-gray-700">
+          2. Wait for the machine to connect to your hotspot; it will show a
+          code.
+        </p>
+        <p class="mb-3 text-gray-500 dark:text-gray-700">
+          3. Enter that code in the box above.
+        </p>
+        <p class="mb-3 text-gray-500 dark:text-gray-700">
+          4. Click on go after entering the code.
+        </p>
+        <p class="mb-3 text-gray-500 dark:text-gray-700">
+          5. You will see a list of files from the machine; select the date for
+          the attendance you need.
+        </p>
+        <p class="mb-3 text-gray-500 dark:text-gray-700">
+          6. Download the file to your device (phone or computer).
+        </p>
+        <p class="mb-3 text-gray-500 dark:text-gray-700">
+          7. Return to our website, click on live attendance, and upload the
+          downloaded file.
+        </p>
+      </div>
     </div>
   );
 }
