@@ -2,12 +2,15 @@
 import Navbar from "@/components/Navbar";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from 'next/navigation'
+
+
 const Page = () => {
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
 
   const search = searchParams.get('id')
   const [CardID, setCardID] = useState(search);
   const [Name, setName] = useState("");
+  
   const [Class, setClass] = useState("");
   const [Contact, setContact] = useState("");
   const [msg, setmsg] = useState("")
@@ -54,7 +57,7 @@ const Page = () => {
         if (data.success) {
           console.log(data);
           setTimeout(() => {
-            window.location.href = "/admin/main"; // Replace "/your-target-page" with the actual target page URL
+            window.location.href = "/admin/cards"; // Replace "/your-target-page" with the actual target page URL
           }, 1000);
         } else {
           console.error("API request failed");
@@ -67,8 +70,6 @@ const Page = () => {
 
   return (
     <>
-      <Navbar />
-
       <div className="mt-20">
         <h2 className="mb-5 text-2xl font-bold text-center">
           Edit Card Details

@@ -124,7 +124,7 @@ const Page = () => {
                     <td className="px-6 py-4">{card.contact}</td>
                     <td className="px-6 py-4">
                       <a
-                        href={`main/edit?id=${card.cardID}`}
+                        href={`edit?id=${card.cardID}`}
                         className="font-medium text-blue-600 hover:underline"
                       >
                         Edit

@@ -6,6 +6,7 @@ export default function Home() {
   const [file, setFile] = useState(null);
   const [idList, setIdList] = useState([]);
   const results = [];
+  const [Loading, setLoading] = useState(false)
   const [FinalARR, setFinalARR] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -207,6 +208,7 @@ export default function Home() {
         </button>
       </div>
 
+  
       {/* {idList.length > 0 && (
         <div>
           <h2 className="text-lg font-semibold mt-4 mb-2">Extracted IDs</h2>
@@ -214,72 +216,74 @@ export default function Home() {
         </div>
 
       )} */}
-       <div className="relative overflow-x-auto shadow-md sm:rounded-lg h-screen">
+      <div className="relative overflow-x-auto shadow-md sm:rounded-lg h-screen">
 
-    
-      {filteredCards.length > 0 ? (
-        <table className="w-full mt-3 text-md text-left rtl:text-right text-gray-500">
-          <thead className="text-md text-gray-700 uppercase bg-gray-50">
-            <tr>
-            <th scope="col" className="px-6 py-3">
-                No.
-              </th>  
-              <th scope="col" className="px-6 py-3">
-                Card ID
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Name
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Class
-              </th>{" "}
-              <th scope="col" className="px-6 py-3">
-                Contact
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Login
-              </th>{" "}
-              <th scope="col" className="px-6 py-3">
-                Logout
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredCards.map((card, index) => (
-              <tr key={card.cardID} className="bg-white border-b">
-                {/* Display only the relevant columns */}
-                <td className="px-6 py-4">{index+1}</td>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-semibold text-gray-900 whitespace-nowrap"
-                >
-                  {card.cardID}
+
+        {filteredCards.length > 0 ? (
+          <table className="w-full mt-3 text-md text-left rtl:text-right text-gray-500">
+            <thead className="text-md text-gray-700 uppercase bg-gray-50">
+              <tr>
+                <th scope="col" className="px-6 py-3">
+                  No.
                 </th>
-                <td className="px-6 py-4">{card.name}</td>
-                <td className="px-6 py-4">{card.class}</td>
-                <td className="px-6 py-4">{card.contact}</td>
-                <td className="px-6 py-4">{card.Login}</td>
-                <td className="px-6 py-4">{card.Logout}</td>
-
-                <td className="px-6 py-4">
-                  <a
-                   href={`/main/edit?id=${card.cardID}`}
-                    className="font-medium text-blue-600 hover:underline"
-                  >
-                    Edit
-                  </a>
-                </td>
+                <th scope="col" className="px-6 py-3">
+                  Card ID
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Name
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Class
+                </th>{" "}
+                <th scope="col" className="px-6 py-3">
+                  Contact
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Login
+                </th>{" "}
+                <th scope="col" className="px-6 py-3">
+                  Logout
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Action
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p className="text-gray-500 text-lg mt-4 text-center">@ZBYTES SYSTEMS</p>
-      )}
-   </div>
+            </thead>
+            <tbody>
+              {filteredCards.map((card, index) => (
+                <tr key={card.cardID} className="bg-white border-b">
+                  {/* Display only the relevant columns */}
+                  <td className="px-6 py-4">{index + 1}</td>
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-semibold text-gray-900 whitespace-nowrap"
+                  >
+                    {card.cardID}
+                  </th>
+                  <td className="px-6 py-4">{card.name}</td>
+                  <td className="px-6 py-4">{card.class}</td>
+                  <td className="px-6 py-4">{card.contact}</td>
+                  <td className="px-6 py-4">{card.Login}</td>
+                  <td className="px-6 py-4">{card.Logout}</td>
+
+                  <td className="px-6 py-4">
+                    <a
+                      href={`edit?id=${card.cardID}`}
+                      className="font-medium text-blue-600 hover:underline"
+                    >
+                      Edit
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="text-gray-500 text-lg mt-4 text-center">@ZBYTES SYSTEMS</p>
+          )}
+      
+
+      </div>
       {/* <div className="overflow-x-auto">
       <table className="min-w-full bg-white border border-gray-200">
         <thead>
