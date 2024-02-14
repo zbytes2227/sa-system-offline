@@ -13,6 +13,7 @@ export default function Home() {
   const filteredCards = FinalARR.filter(
     (card) =>
       card.name.toLowerCase().includes(searchQueryLowercase) ||
+      card.cardID.toLowerCase().includes(searchQueryLowercase) ||
       card.class.toLowerCase().includes(searchQueryLowercase) ||
       card.contact.toLowerCase().includes(searchQueryLowercase)
   );
@@ -220,6 +221,9 @@ export default function Home() {
         <table className="w-full mt-3 text-md text-left rtl:text-right text-gray-500">
           <thead className="text-md text-gray-700 uppercase bg-gray-50">
             <tr>
+            <th scope="col" className="px-6 py-3">
+                No.
+              </th>  
               <th scope="col" className="px-6 py-3">
                 Card ID
               </th>
@@ -244,9 +248,10 @@ export default function Home() {
             </tr>
           </thead>
           <tbody>
-            {filteredCards.map((card) => (
+            {filteredCards.map((card, index) => (
               <tr key={card.cardID} className="bg-white border-b">
                 {/* Display only the relevant columns */}
+                <td className="px-6 py-4">{index+1}</td>
                 <th
                   scope="row"
                   className="px-6 py-4 font-semibold text-gray-900 whitespace-nowrap"
@@ -261,7 +266,7 @@ export default function Home() {
 
                 <td className="px-6 py-4">
                   <a
-                    href="#"
+                   href={`/main/edit?id=${card.cardID}`}
                     className="font-medium text-blue-600 hover:underline"
                   >
                     Edit
