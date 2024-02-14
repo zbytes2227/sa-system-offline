@@ -8,6 +8,14 @@ const handler = async (req, res) => {
   if (req.method == "POST") {
     try {
       console.log(req.body);
+
+      const existingCard = await Cards.findOne({ cardID: req.body.cardID });
+
+      if (existingCard) {
+        // If cardID already exists, return an error response
+        return res.status(400).json({ success: false, msg: "CardID already exists." });
+      }
+      
       const newCard = new Cards({
         cardID: req.body.cardID,
         name: req.body.name,
