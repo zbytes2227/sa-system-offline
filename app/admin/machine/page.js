@@ -1,178 +1,32 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Papa from "papaparse";
 
 export default function Home() {
-  const [file, setFile] = useState(null);
-  const [idList, setIdList] = useState([]);
-  const results = [];
-  const [FinalARR, setFinalARR] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [DeviceIP, setDeviceIP] = useState("192.168.1");
+  const [DeviceIP, setDeviceIP] = useState("192.168.1.");
+  const [currentTime, setCurrentTime] = useState(new Date());
 
-  const searchQueryLowercase = searchQuery.toLowerCase();
-  const filteredCards = FinalARR.filter(
-    (card) =>
-      card.name.toLowerCase().includes(searchQueryLowercase) ||
-      card.class.toLowerCase().includes(searchQueryLowercase) ||
-      card.contact.toLowerCase().includes(searchQueryLowercase)
-  );
+  useEffect(() => {
+    // Update the current time every second
+    const intervalId = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
 
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    setFile(selectedFile);
+    // Cleanup the interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
 
-    // Read the CSV file
-    const reader = new FileReader();
-    reader.onload = () => {
-      parseCSV(reader.result);
-      console.log("readerresult");
-      console.log(reader.result);
-    };
-    reader.readAsText(selectedFile);
+  const formattedDate = () => {
+    const year = currentTime.getFullYear();
+    const month = currentTime.getMonth() + 1; // Months are zero-based
+    const day = currentTime.getDate();
+    const hour = currentTime.getHours();
+    const min = currentTime.getMinutes();
+    const sec = currentTime.getSeconds();
+
+    return `http://${DeviceIP}/time?year=${year}&month=${month}&day=${day}&hour=${hour}&min=${min}&sec=${sec}`;
   };
-
-  const parseCSV = (csvContent) => {
-    const ids = [];
-
-    // Use papaparse library to parse CSV content
-    Papa.parse(csvContent, {
-      header: false,
-      skipEmptyLines: true,
-      step: (result) => {
-        const [id, action, time] = result.data;
-        if (!ids.includes(id)) {
-          ids.push(id);
-        }
-        results.push({ id, action, time });
-      },
-      complete: () => {
-        setIdList(ids);
-        fetchAttendance(ids);
-        console.log("Parsed IDS:", ids);
-        console.log("Parsed CSV:", results);
-      },
-    });
-  };
-
-  const fetchAttendance = async (ids) => {
-    try {
-      const response = await fetch("/api/getAttendance", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ids }),
-      });
-
-      if (response) {
-        const responseData = await response.json();
-
-        if (responseData.success) {
-          // Handle the successful response
-          console.log(responseData.msg);
-
-          // Access the details array and print it or process it as needed
-          const details = responseData.details;
-          console.log("Details:", details);
-          mergeArray(results, details);
-        } else {
-          // Handle the case where the server indicates failure
-          console.error("Failed to fetch attendance:", responseData.msg);
-        }
-      } else {
-        // Handle other response statuses (e.g., 404 Not Found, 500 Internal Server Error)
-        console.error("Failed to fetch attendance. Status:", response.status);
-      }
-    } catch (error) {
-      // Handle network or other errors
-      console.error("Error fetching attendance:", error);
-    }
-  };
-
-  const [Connecting, setConnecting] = useState(false);
-
-  const connectToMachine = () => {
-    setConnecting(true);
-    getFileNames();
-  };
-
-  const getFileNames = async () => {
-    try {
-      const response = await fetch(`https://${DeviceIP}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response) {
-        const data = await response.json();
-        const fileNames = data
-          .filter((item) => item.file)
-          .map((item) => item.file);
-        console.log(fileNames);
-      } else {
-        console.error("Failed to fetch attendance. Status:", response.status);
-      }
-    } catch (error) {
-      console.error("Error fetching attendance:", error);
-    }
-  };
-
-  function mergeArray(attendanceArray, studentDetailsArray) {
-    const mergedArray = attendanceArray
-      .map((attendance) => {
-        const studentDetails = studentDetailsArray.find(
-          (student) => student.cardID === attendance.id
-        );
-
-        if (studentDetails) {
-          return {
-            cardID: studentDetails.cardID,
-            name: studentDetails.name,
-            class: studentDetails.class,
-            contact: studentDetails.contact,
-            action: attendance.action,
-            time: attendance.time,
-          };
-        }
-
-        return null;
-      })
-      .filter(Boolean);
-
-    // Grouping actions by cardID
-    const groupedByCardID = mergedArray.reduce((acc, entry) => {
-      const {
-        cardID,
-        name,
-        class: studentClass,
-        contact,
-        action,
-        time,
-      } = entry;
-
-      if (!acc[cardID]) {
-        acc[cardID] = {
-          cardID,
-          name,
-          class: studentClass,
-          contact,
-        };
-      }
-
-      // Combine login and logout times
-      acc[cardID][action] = time;
-
-      return acc;
-    }, {});
-
-    // Convert the grouped object to an array
-    const finalArray = Object.values(groupedByCardID);
-    setFinalARR(finalArray);
-    console.log(finalArray);
-  }
+  
 
   return (
     <div className="p-4 sm:ml-64 mt-14">
@@ -265,12 +119,12 @@ export default function Home() {
           placeholder="192.168.1.X"
           required
         />
-        <a
-          href={`http://${DeviceIP}`}
-          class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
-        >
-          Set Machine Time
-        </a>
+      <a
+      href={formattedDate()}
+      className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
+    >
+      Set Machine Time
+    </a>
       </div>
     </div>
   );
