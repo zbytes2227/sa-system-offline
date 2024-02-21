@@ -5,34 +5,34 @@ import connectDb from "../../middleware/mongoose";
 
 const handler = async (req, res) => {
 
-  // if (req.method == "POST") {
-  //   try {
-  //     console.log(req.body);
+  if (req.method == "POST") {
+    try {
+      console.log(req.body);
 
-  //     const existingCard = await Cards.findOne({ cardID: req.body.cardID });
+      const existingCard = await Cards.findOne({ cardID: req.body.cardID });
 
-  //     if (existingCard) {
-  //       // If cardID already exists, return an error response
-  //       return res.status(400).json({ success: false, msg: "CardID already exists." });
-  //     }
+      if (existingCard) {
+        // If cardID already exists, return an error response
+        return res.status(400).json({ success: false, msg: "CardID already exists." });
+      }
 
-  //     const newCard = new Cards({
-  //       cardID: req.body.cardID,
-  //       name: req.body.name,
-  //       class: req.body.class,
-  //       contact: req.body.contact,
-  //     });
+      const newCard = new Cards({
+        cardID: req.body.cardID,
+        name: req.body.name,
+        class: req.body.class,
+        contact: req.body.contact,
+      });
 
-  //     await newCard.save();
-  //     console.log("okay");
-  //     return res.status(200).json({ success: true, msg: "New Card Added Successfuly.." });
-  //   } catch (err) {
-  //     console.error(err);
-  //     res
-  //       .status(500)
-  //       .json({ success: false, msg: "Server error..Contact the Developers." });
-  //   }
-  // }
+      await newCard.save();
+      console.log("okay");
+      return res.status(200).json({ success: true, msg: "New Card Added Successfuly.." });
+    } catch (err) {
+      console.error(err);
+      res
+        .status(500)
+        .json({ success: false, msg: "Server error..Contact the Developers." });
+    }
+  }
 };
 
 export default connectDb(handler);
